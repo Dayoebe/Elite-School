@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        // Academic Years table
+        Schema::create('academic_years', function (Blueprint $table) {
+            $table->id();
+            $table->string('start_year');
+            $table->string('stop_year');
+            $table->foreignId('school_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        // Semesters table
+        Schema::create('semesters', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('academic_year_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('school_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->boolean('check_result')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('semesters');
+        Schema::dropIfExists('academic_years');
+    }
+};
